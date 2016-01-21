@@ -1,0 +1,8 @@
+infinity 8 infinity infinity infinity infinity infinity 10
+8 infinity 6 infinity infinity infinity infinity 8
+infinity 6 infinity 10 infinity 9 10 4
+infinity infinity 10 infinity 7 3 infinity infinity
+infinity infinity infinity 7 infinity 7 infinity infinity
+infinity infinity 9 3 7 infinity 2 infinity
+infinity infinity 10 infinity infinity 2 infinity 15
+10 8 4 infinity infinity infinity 15 infinity
