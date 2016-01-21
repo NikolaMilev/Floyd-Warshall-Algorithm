@@ -74,7 +74,7 @@ def floydWarshall(graphMatrix):
 		for i in xrange(numVertices):
 			for j in xrange(numVertices):
 				dist[i][j] = calculateMinimum(dist[i][j], dist[i][k], dist[k][j])
-			if dist[i][j] < 0:
+			if dist[i][i] < 0:
 				return None
 		distances = distances + [copyMatrix(dist)]
 	return distances
@@ -111,7 +111,7 @@ def floydWarshallReconstructWiki(graphMatrix):
 				if(minWithPath[1]):
 					dist[i][j] = minWithPath[0]
 					next[i][j] = next[i][k]
-			if dist[i][j] < 0:
+			if dist[i][i] < 0:
 				return None
 		distances = distances + [copyMatrix(dist)]
 	return (distances, next)
@@ -120,7 +120,6 @@ def floydWarshallReconstructWiki(graphMatrix):
 def floydWarshallReconstructMine(graphMatrix):
 	if checkMatrix(graphMatrix) == False:
 		return None
-
 	#all the matrices 
 	distances = []
 
@@ -145,7 +144,7 @@ def floydWarshallReconstructMine(graphMatrix):
 				if(minWithPath[1]):
 					dist[i][j] = minWithPath[0]
 					path[i][j] = k
-			if dist[i][j] < 0:
+			if dist[i][i] < 0:
 				return None
 		distances = distances + [copyMatrix(dist)]
 		pathList = pathList + [copyMatrix(path)]
@@ -167,7 +166,7 @@ def reconstructWiki(next, v1, v2):
 	return path
 
 #a recursive function used to reconstruct the path of the graph
-def reconstructMine(graphMatrix, distances, pathList, v1, v2):
+def reconstructMine(distances, pathList, v1, v2):
 	#indices out of bound
 	if(v1 < 0 or v2< 0 or v1 >= len(pathList[0]) or v2 >= len(pathList[0])):
 		return None
@@ -196,6 +195,7 @@ def parseInputFile(path):
 		lines = openFile.readlines()
 		#lines = [x.strip() for x in lines]
 		graphMatrix = [x.split() for x in lines]
+		graphMatrix = [x for x in graphMatrix if x != []]
 		return graphMatrix
 	except IOError:
 		return None
@@ -210,7 +210,9 @@ def idemo(v1, v2):
 if len(sys.argv) != 2:
 	print "You have to pass exactly 1 command line argument (path)"
 	quit()
+
 graphMatrix = parseInputFile(sys.argv[1])
+
 solutionPair = floydWarshallReconstructMine(graphMatrix)
 v1=input('The first vertex of a path: ')
 v2=input('The second vertex of a path: ')
@@ -218,5 +220,5 @@ path = reconstructMine(solutionPair[0][-1], solutionPair[1][-1], v1, v2)
 if path==None:
 	print 'There is no path between those two vertices.'
 else:
-	print path
+	print path, solutionPair[0][-1][v1][v2]
 

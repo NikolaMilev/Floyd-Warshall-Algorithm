@@ -9,6 +9,12 @@ def evaluate(number):
 		return int(number)
 	except ValueError:
 		return None
+def evaluateWrite(number):
+	wr = evaluate(number)
+	if wr == None:
+		return 'INF'
+	else:
+		return wr
 
 #just checking if it really is a matrix
 #and if it is square
@@ -68,7 +74,7 @@ def floydWarshallReconstructMine(graphMatrix):
 				if(minWithPath[1]):
 					dist[i][j] = minWithPath[0]
 					path[i][j] = k
-			if dist[i][j] < 0:
+			if dist[i][i] < 0:
 				return None
 		distances = distances + [copyMatrix(dist)]
 		pathList = pathList + [copyMatrix(path)]
@@ -111,6 +117,7 @@ def parseInputFile(path):
 		lines = openFile.readlines()
 		#lines = [x.strip() for x in lines]
 		graphMatrix = [x.split() for x in lines]
+		graphMatrix = [x for x in graphMatrix if x != []]
 		return graphMatrix
 	except IOError:
 		return None
@@ -121,17 +128,43 @@ if len(sys.argv) != 2:
 	quit()
 #parse the input
 graphMatrix = parseInputFile(sys.argv[1])
-
 #obtain the solution
 solutionPair = floydWarshallReconstructMine(graphMatrix)
+
+if solutionPair == None:
+	print 'All the shortest paths couldn\'t be found in this graph.'
+	exit()
 
 #determine the vertices
 v1=input('The first vertex of a path: ')
 v2=input('The second vertex of a path: ')
-
 #calculate the path and print it
 path = reconstructMine(solutionPair[0][-1], solutionPair[1][-1], v1, v2)
 if path==None:
 	print 'There is no path between those two vertices.'
 else:
-	print path
+	print 'Putanja: ', path, '	Njena tezina: ', solutionPair[0][-1][v1][v2]
+
+
+#output part
+lineLen = 20*len(solutionPair[0][-1])
+outputFile = open('solution.txt', 'w')
+for k in xrange(len(solutionPair[0])):
+#	if k==0:
+#		str1 = 'Distance matrix'
+#		str2 = 'Path matrix'
+#		str3 = str1.center(lineLen/2-len(str1)) + str2.center(lineLen/2-len(str2))+'\n\n'
+#		outputFile.write(str3)
+	strg = '\nIteracija broj: ' + str(k+1) + '\n'
+	outputFile.write(strg)
+	
+	for l in xrange(len(solutionPair[0][k])):
+		stringic = '| '
+		for j in xrange(len(solutionPair[0][k][l])):
+			stringic += str(evaluateWrite(solutionPair[0][k][l][j])).center(5)
+		stringic += '  |  '
+		for j in xrange(len(solutionPair[1][k][l])):
+			stringic += str(evaluateWrite(solutionPair[1][k][l][j])).center(5)
+		stringic += ' |\n'
+		outputFile.write(stringic)
+	
